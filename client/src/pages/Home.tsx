@@ -11,8 +11,24 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Clock, Trophy, Rocket, Users, TrendingUp, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useLocation } from "wouter";
+import { useAuth } from "@/_core/hooks/useAuth";
+import Footer from "@/components/Footer";
+
+const scrollToSection = (sectionId: string) => {
+  const element = document.getElementById(sectionId);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+};
 
 export default function Home() {
+  // The userAuth hooks provides authentication state
+  // To implement login/logout functionality, simply call logout() or redirect to getLoginUrl()
+  let { user, loading, error, isAuthenticated, logout } = useAuth();
+
+  const [, setLocation] = useLocation();
+  
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -21,8 +37,8 @@ export default function Home() {
   });
 
   useEffect(() => {
-    // Countdown to Christmas Day 2025
-    const targetDate = new Date('2025-12-25T00:00:00').getTime();
+    // Countdown to December 27, 2025 8:00 PM GMT
+    const targetDate = new Date('2025-12-27T20:00:00Z').getTime();
     
     const updateCountdown = () => {
       const now = new Date().getTime();
@@ -46,7 +62,7 @@ export default function Home() {
 
   const projects = [
     {
-      id: 1,
+      id: "sleigh-tracker-pro",
       title: "Sleigh Tracker Pro",
       description: "Real-time GPS tracking for holiday deliveries with AI-powered route optimization. Making sure every gift arrives on time!",
       category: "Logistics",
@@ -55,7 +71,7 @@ export default function Home() {
       investment: "Seeking $500K"
     },
     {
-      id: 2,
+      id: "snowflake-analytics",
       title: "Snowflake Analytics",
       description: "Beautiful data visualization platform that turns complex datasets into stunning winter-themed dashboards.",
       category: "Data Science",
@@ -64,7 +80,7 @@ export default function Home() {
       investment: "Series A Ready"
     },
     {
-      id: 3,
+      id: "cocoa-connect",
       title: "Cocoa Connect",
       description: "Social platform connecting hot chocolate enthusiasts worldwide. Community-driven recipe sharing with AR try-before-you-brew.",
       category: "Social",
@@ -73,7 +89,7 @@ export default function Home() {
       investment: "Seeking $250K"
     },
     {
-      id: 4,
+      id: "gift-genius-ai",
       title: "Gift Genius AI",
       description: "ML-powered gift recommendation engine that analyzes personality traits and preferences to suggest the perfect present.",
       category: "AI/ML",
@@ -82,7 +98,7 @@ export default function Home() {
       investment: "Seeking $750K"
     },
     {
-      id: 5,
+      id: "winter-wellness",
       title: "Winter Wellness",
       description: "Seasonal mental health app with guided meditation, mood tracking, and community support for beating winter blues.",
       category: "Health Tech",
@@ -91,7 +107,7 @@ export default function Home() {
       investment: "Seeking $400K"
     },
     {
-      id: 6,
+      id: "festive-finance",
       title: "Festive Finance",
       description: "Smart budgeting tool for holiday spending with gamification and savings challenges. Make your money jingle all the way!",
       category: "FinTech",
@@ -133,7 +149,7 @@ export default function Home() {
             </h1>
             
             <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto font-light">
-              Where Innovation Meets Celebration. <span className="text-[#FFB703] font-medium">48 Hours</span> of Intense Building. 
+              Where Innovation Meets Celebration. <span className="text-[#FFB703] font-medium">72 Hours</span> of Intense Building. 
               <span className="text-[#E63946] font-medium"> Investors Watching.</span> One Championship Trophy.
             </p>
 
@@ -155,6 +171,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button 
                 size="lg" 
+                onClick={() => scrollToSection('projects-section')}
                 className="bg-[#E63946] hover:bg-[#E63946]/90 text-white px-8 py-6 text-lg font-bold uppercase tracking-wider border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
               >
                 <Rocket className="mr-2 h-5 w-5" />
@@ -163,6 +180,7 @@ export default function Home() {
               <Button 
                 size="lg" 
                 variant="outline"
+                onClick={() => scrollToSection('investor-section')}
                 className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-[#1D3557] px-8 py-6 text-lg font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105"
               >
                 <TrendingUp className="mr-2 h-5 w-5" />
@@ -198,6 +216,7 @@ export default function Home() {
 
       {/* Projects Section - Diagonal layout with championship cards */}
       <section 
+        id="projects-section"
         className="py-32 relative overflow-hidden"
         style={{
           background: 'linear-gradient(135deg, #1D3557 0%, #2B2D42 100%)',
@@ -221,7 +240,7 @@ export default function Home() {
               <span className="block text-[#E63946] mt-2">FINISH LINE</span>
             </h2>
             <p className="text-xl text-white/80 max-w-2xl mx-auto">
-              Six exceptional teams. Forty-eight hours of intense development. 
+              Six exceptional teams. Seventy-two hours of intense development. 
               <span className="text-[#FFB703] font-medium"> Investors are taking notes.</span>
             </p>
           </div>
@@ -257,7 +276,10 @@ export default function Home() {
                       <TrendingUp className="w-4 h-4 mr-2 text-[#E63946]" />
                       <span className="font-bold text-[#E63946]">{project.investment}</span>
                     </div>
-                    <Button className="w-full mt-4 bg-[#E63946] hover:bg-[#E63946]/90 text-white font-bold uppercase tracking-wide">
+                    <Button 
+                      onClick={() => setLocation(`/project/${project.id}`)}
+                      className="w-full mt-4 bg-[#E63946] hover:bg-[#E63946]/90 text-white font-bold uppercase tracking-wide"
+                    >
                       View Details
                     </Button>
                   </div>
@@ -273,6 +295,7 @@ export default function Home() {
 
       {/* Investor CTA Section */}
       <section 
+        id="investor-section"
         className="py-32 relative overflow-hidden bg-white"
         style={{
           backgroundImage: 'url(/images/investor-bg.png)',
@@ -304,7 +327,7 @@ export default function Home() {
               {[
                 { title: 'Vetted Teams', desc: 'Top talent from leading universities and companies', icon: Users },
                 { title: 'Market Validation', desc: 'Real problems, tested solutions, proven demand', icon: TrendingUp },
-                { title: 'Fast Execution', desc: 'From concept to MVP in 48 hours', icon: Zap }
+                { title: 'Fast Execution', desc: 'From concept to MVP in 72 hours', icon: Zap }
               ].map((item, index) => (
                 <div key={index} className="bg-gradient-to-br from-[#1D3557] to-[#2B2D42] p-8 rounded-lg text-white transform hover:scale-105 transition-all duration-300">
                   <item.icon className="w-12 h-12 mx-auto mb-4 text-[#FFB703]" />
@@ -326,26 +349,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#1D3557] text-white py-12">
-        <div className="container text-center">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <img src="/images/countdown-icon.png" alt="Christmas Rush" className="w-12 h-12" />
-            <h3 className="text-3xl font-bold">THE CHRISTMAS RUSH</h3>
-          </div>
-          <p className="text-white/70 mb-6">
-            Where holiday spirit meets startup velocity ⛷️ 🎄 🚀
-          </p>
-          <div className="flex justify-center gap-6 text-sm text-white/60">
-            <a href="#" className="hover:text-[#FFB703] transition-colors">About</a>
-            <a href="#" className="hover:text-[#FFB703] transition-colors">Schedule</a>
-            <a href="#" className="hover:text-[#FFB703] transition-colors">Sponsors</a>
-            <a href="#" className="hover:text-[#FFB703] transition-colors">Contact</a>
-          </div>
-          <p className="text-white/50 text-sm mt-8">
-            © 2025 The Christmas Rush. All rights reserved. Built with velocity. 🏆
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
